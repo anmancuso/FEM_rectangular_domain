@@ -39,9 +39,13 @@ The implementation focuses on:
 ## Installation
 To run the code, ensure you have Python installed along with the following libraries:
 
-> numpy
-> scipy
-> matplotlib (or plotly for advanced visualizations)
+```python
+numpy
+scipy
+matplotlib (or plotly for advanced visualizations)
+```
 
 You can install these dependencies using pip:
-> pip install numpy scipy matplotlib
+```
+ pip install numpy scipy matplotlib
+```
