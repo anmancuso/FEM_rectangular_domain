@@ -71,7 +71,7 @@ $$
 K_{ij} = \int_{\Omega} \nabla \phi_i \cdot \nabla \phi_j , d\Omega
 $$
 
-where \( \phi_i \) and \( \phi_j \) are the linear shape functions associated with the triangle's nodes. The area \( \Omega \) of the triangle is given by:
+where $`phi_i`$ and $`\phi_j`$ are the linear shape functions associated with the triangle's nodes. The area $`\Omega`$ of the triangle is given by:
 
 $$
 \text{Area} = \frac{1}{2} |x_1(y_2 - y_3) + x_2(y_3 - y_1) + x_3(y_1 - y_2)|
@@ -81,7 +81,7 @@ $$
 - **Returns**: 3x3 local stiffness matrix.
 
 #### `transform_stiffness_matrix(points, K_ref)`
-Transforms a reference stiffness matrix into the stiffness matrix for a generic triangle. This transformation is necessary to adapt the stiffness matrix calculated for a reference triangle to any triangle in the domain. The transformation is based on the affine mapping between the reference triangle and the generic triangle.
+Transforms a reference stiffness matrix into the stiffness matrix for a generic triangle. This transformation is necessary to adapt the stiffness matrix calculated for a reference triangle to any triangle in the domain. The transformation is based on the **affine mapping** between the reference triangle and the generic triangle.
 
 - **Parameters**: `points` (coordinates of the generic triangle), `K_ref` (reference stiffness matrix).
 - **Returns**: Transformed stiffness matrix for the generic triangle.
