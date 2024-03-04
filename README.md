@@ -28,14 +28,9 @@ The implementation focuses on:
 ## Files in the Repository
 - `solver.py`: Contains all the key functions for the FEM implementation.
 - `FEM_Demo.ipynb`: A Jupyter notebook demonstrating the usage of functions from `solver.py`.
-
-
-
-## Key Functions
-### solver.py
-
-### FEM_Demo.ipynb
-
+- 
+## Usage
+To use the solver, run the Jupyter notebook `FEM_Demo.ipynb` . This notebook will guide you through the process of solving the Poisson equation using the functions defined in `solver.py`.
 
 ## Installation
 To run the code, ensure you have Python installed along with the following libraries:
@@ -51,9 +46,58 @@ You can install these dependencies using pip:
  pip install numpy scipy matplotlib
 ```
 
+## Key Functions
+### solver.py
 
-## Usage
-To use the solver, run the Jupyter notebook `FEM_Demo.ipynb` . This notebook will guide you through the process of solving the Poisson equation using the functions defined in `solver.py`.
+
+#### `create_delaunay_mesh(a, b, c, d, nx, ny)`
+Generates a Delaunay triangulation mesh over a rectangular grid.
+- **Parameters**: `a, b` (x-axis range), `c, d` (y-axis range), `nx, ny` (divisions along the x and y axes).
+- **Returns**: `points` (2D array of points in the grid), `delaunay_tri.simplices` (the simplices, i.e., triangles, of the Delaunay triangulation).
+
+#### `plot_delaunay_mesh(points, triangles)`
+Plots the Delaunay triangulation mesh.
+- **Parameters**: `points` (2D array of points in the grid), `triangles` (the simplices of the Delaunay triangulation).
+
+#### `find_boundary_nodes_delaunay(points, a, b, c, d)`
+Identifies boundary nodes in a set of points within a rectangular region.
+- **Parameters**: `points` (2D array of points), `a, b` (x-coordinate boundaries), `c, d` (y-coordinate boundaries).
+- **Returns**: A sorted list of indices of points that lie on the boundary of the rectangle.
+
+#### `compute_local_stiffness_matrix(coords)`
+Calculates the local stiffness matrix for a triangular element. The local stiffness matrix \( K \) for a triangle is calculated using the coordinates of its vertices. The general formula is:
+
+$$
+K_{ij} = \int_{\Omega} \nabla \phi_i \cdot \nabla \phi_j , d\Omega
+$$
+
+where \( \phi_i \) and \( \phi_j \) are the linear shape functions associated with the triangle's nodes. The area \( \Omega \) of the triangle is given by:
+
+$$
+\text{Area} = \frac{1}{2} |x_1(y_2 - y_3) + x_2(y_3 - y_1) + x_3(y_1 - y_2)|
+$$
+
+- **Parameters**: `points` (3x2 array with the (x, y) coordinates of the triangle's vertices).
+- **Returns**: 3x3 local stiffness matrix.
+
+#### `transform_stiffness_matrix(points, K_ref)`
+Transforms a reference stiffness matrix into the stiffness matrix for a generic triangle. This transformation is necessary to adapt the stiffness matrix calculated for a reference triangle to any triangle in the domain. The transformation is based on the affine mapping between the reference triangle and the generic triangle.
+
+- **Parameters**: `points` (coordinates of the generic triangle), `K_ref` (reference stiffness matrix).
+- **Returns**: Transformed stiffness matrix for the generic triangle.
+
+#### `assemble_global_stiffness_matrix(triangles, nodes, K_ref)`
+Assembles the global stiffness matrix from the local stiffness matrices of triangles. The global stiffness matrix is a sparse matrix representing the entire FEM system. Each local stiffness matrix contributes to the global matrix at positions corresponding to the triangle's nodes.
+
+- **Parameters**: `triangles` (list of triangles), `nodes` (node coordinates), `K_ref` (reference stiffness matrix).
+- **Returns**: `lil_matrix`: Global stiffness matrix (expected to be a sparse matrix).
+### FEM_Demo.ipynb
+
+
+
+
+
+
 
 
 ## Contributing
