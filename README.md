@@ -17,5 +17,16 @@ u(x) = 0 \quad \forall x \in \partial\Omega
 $$
 
 
+The implementation focuses on:
+
+- Using essential libraries like scipy and numpy for computations.
+- Analyzing the method's convergence with a test case.
+- Visualizing results using matplotlib or plotly.
+- Refining meshes based on convergence theory to enhance solution accuracy.
+
+## Files in the Repository
+- solver.py: Contains all the key functions for the FEM implementation.
+- FEM_Demo.ipynb: A Jupyter notebook demonstrating the usage of functions from solver.py.
+
 
 
