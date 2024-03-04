@@ -43,7 +43,7 @@ To run the code, ensure you have Python installed along with the following libra
 ```
 numpy
 scipy
-matplotlib (or plotly for advanced visualizations)
+matplotlib
 ```
 
 You can install these dependencies using pip:
