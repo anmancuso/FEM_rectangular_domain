@@ -39,7 +39,7 @@ The implementation focuses on:
 ## Installation
 To run the code, ensure you have Python installed along with the following libraries:
 
-```python
+```
 numpy
 scipy
 matplotlib (or plotly for advanced visualizations)
@@ -49,3 +49,11 @@ You can install these dependencies using pip:
 ```
  pip install numpy scipy matplotlib
 ```
+
+
+## Usage
+To use the solver, run the Jupyter notebook `FEM_Demo.ipynb` . This notebook will guide you through the process of solving the Poisson equation using the functions defined in `solver.py`.
+
+
+## Contributing
+Contributions to enhance the solver's efficiency, accuracy, or functionality are welcome. Please feel free to fork the repository and submit pull requests.
