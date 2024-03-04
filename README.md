@@ -77,6 +77,8 @@ $$
 \text{Area} = \frac{1}{2} |x_1(y_2 - y_3) + x_2(y_3 - y_1) + x_3(y_1 - y_2)|
 $$
 
+This is used to compute the Local Matrix for a simple case Triangle = ([[0, 0], [1, 0], [0, 1]]) and then the generic local matrix is calculated via change of variables.
+
 - **Parameters**: `points` (3x2 array with the (x, y) coordinates of the triangle's vertices).
 - **Returns**: 3x3 local stiffness matrix.
 
