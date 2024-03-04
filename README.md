@@ -25,8 +25,8 @@ The implementation focuses on:
 - Refining meshes based on convergence theory to enhance solution accuracy.
 
 ## Files in the Repository
-- solver.py: Contains all the key functions for the FEM implementation.
-- FEM_Demo.ipynb: A Jupyter notebook demonstrating the usage of functions from solver.py.
+- `solver.py`: Contains all the key functions for the FEM implementation.
+- `FEM_Demo.ipynb`: A Jupyter notebook demonstrating the usage of functions from `solver.py`.
 
 
 
