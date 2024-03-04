@@ -49,17 +49,28 @@ You can install these dependencies using pip:
 ## Key Functions
 ### solver.py
 
+####  `create_rectangular_triangle_mesh(a, b, c, d, nx, ny)`
+Creates a regular grid of right-angled triangles, which is a common requirement in finite element analysis. The function generates a mesh over a rectangular domain by dividing it into a grid of right-angled triangles.
 
+- **Parameters**:
+  - `a, b`: x-axis range.
+  - `c, d`: y-axis range.
+  - `nx, ny`: Number of divisions along the x and y axes.
+- **Returns**:
+  - `points`: Array of points in the mesh. Each point is a vertex of one or more triangles.
+  - `triangles`: Array of triangles. Each triangle is defined by the indices of its vertices in the `points` array.
+  - 
 #### `create_delaunay_mesh(a, b, c, d, nx, ny)`
-Generates a Delaunay triangulation mesh over a rectangular grid.
+(not Used)
+Generates a triangular mesh over a rectangular grid.
 - **Parameters**: `a, b` (x-axis range), `c, d` (y-axis range), `nx, ny` (divisions along the x and y axes).
 - **Returns**: `points` (2D array of points in the grid), `delaunay_tri.simplices` (the simplices, i.e., triangles, of the Delaunay triangulation).
 
-#### `plot_delaunay_mesh(points, triangles)`
-Plots the Delaunay triangulation mesh.
+#### `plot_mesh(points, triangles)`
+Plots triangular mesh.
 - **Parameters**: `points` (2D array of points in the grid), `triangles` (the simplices of the Delaunay triangulation).
 
-#### `find_boundary_nodes_delaunay(points, a, b, c, d)`
+#### `find_boundary_nodes(points, a, b, c, d)`
 Identifies boundary nodes in a set of points within a rectangular region.
 - **Parameters**: `points` (2D array of points), `a, b` (x-coordinate boundaries), `c, d` (y-coordinate boundaries).
 - **Returns**: A sorted list of indices of points that lie on the boundary of the rectangle.
@@ -108,8 +119,38 @@ Assembles the global stiffness matrix from the local stiffness matrices of trian
 
 - **Parameters**: `triangles` (list of triangles), `nodes` (node coordinates), `K_ref` (reference stiffness matrix).
 - **Returns**: `lil_matrix`: Global stiffness matrix (expected to be a sparse matrix).
-### FEM_Demo.ipynb
 
+
+####  `compute_load_vector(f, nodes)`
+Calculates the load vector for the finite element method. This function evaluates a given load function `f` at each node in the mesh and assembles the load vector.
+- **Parameters**:
+  - `f`: A function representing the load applied to the domain.
+  - `nodes`: Array of node coordinates.
+- **Returns**: Load vector as a NumPy array.
+
+####  `apply_reduced_system_approach(stiffness_matrix, load_vector, boundary_nodes)`
+Applies the reduced system approach to handle boundary conditions in the finite element method. This function modifies the stiffness matrix and the load vector by zeroing out the rows and columns corresponding to the boundary nodes, effectively removing them from the system.
+- **Parameters**:
+  - `stiffness_matrix`: The global stiffness matrix.
+  - `load_vector`: The global load vector.
+  - `boundary_nodes`: List of indices of boundary nodes.
+- **Returns**: Reduced stiffness matrix and load vector, with boundary nodes eliminated.
+
+####  `apply_boundary_conditions_penalty_method(stiffness_matrix, load_vector, boundary_nodes, M=1e10)`
+(Not Used)
+Applies boundary conditions using the penalty method. This method modifies the stiffness matrix by adding a large value `M` (penalty parameter) to the diagonal entries corresponding to the boundary nodes. This approach enforces the boundary conditions by making the corresponding rows and columns in the stiffness matrix dominant.
+- **Parameters**:
+  - `stiffness_matrix`: The global stiffness matrix.
+  - `load_vector`: The global load vector.
+  - `boundary_nodes`: List of indices of boundary nodes.
+  - `M`: Penalty parameter (default is `1e10`).
+- **Returns**: Modified stiffness matrix and load vector.
+
+
+
+
+### FEM_Demo.ipynb
+Step by Step Implementation of the Assigned Exercise.
 
 
 
