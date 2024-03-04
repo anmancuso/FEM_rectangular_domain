@@ -30,3 +30,18 @@ The implementation focuses on:
 
 
 
+## Key Functions
+### solver.py
+
+### FEM_Demo.ipynb
+
+
+## Installation
+To run the code, ensure you have Python installed along with the following libraries:
+
+> numpy
+> scipy
+> matplotlib (or plotly for advanced visualizations)
+
+You can install these dependencies using pip:
+> pip install numpy scipy matplotlib
