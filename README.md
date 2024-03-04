@@ -91,6 +91,7 @@ The affine transformation is defined as follows:
 The Jacobian $`J`$ of the transformation, which is the matrix of all first-order partial derivatives, is used to transform the area element and the gradient of the shape functions. The determinant of the Jacobian $`\det(J)`$ represents the area scaling factor between the reference and the generic triangle.
 
 The transformed stiffness matrix `K` for the generic triangle is then calculated using the formula:
+
 $$
 K = det(J) * T^(-1)^T * K_ref * T^(-1)
 $$
