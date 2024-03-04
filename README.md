@@ -5,6 +5,7 @@ This repository contains a Python implementation of the finite element method (F
 
 Description
 The solver addresses the following problem:
+
 $$
 -Δu(x) = f(x) \quad \forall x \in \Omega := [a, b] \times [c, d]
 $$
