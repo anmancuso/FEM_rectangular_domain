@@ -5,8 +5,66 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 
+def create_rectangular_triangle_mesh(a, b, c, d, nx, ny):
+    """
+    Creates a regular grid of right-angled triangles.
 
+    Parameters:
+    a, b - x-axis range.
+    c, d - y-axis range.
+    nx, ny - number of divisions along the x and y axes.
 
+    Returns:
+    points - Array of points in the mesh.
+    triangles - Array of triangles (each triangle defined by indices of its vertices).
+    """
+    # Crea la griglia di punti
+    x = np.linspace(a, b, nx)
+    y = np.linspace(c, d, ny)
+    xv, yv = np.meshgrid(x, y)
+    points = np.vstack([xv.ravel(), yv.ravel()]).T
+
+    # Crea i triangoli
+    triangles = []
+    for i in range(nx - 1):
+        for j in range(ny - 1):
+            # Indici dei vertici del quadrato
+            lower_left = i + j * nx
+            lower_right = (i + 1) + j * nx
+            upper_left = i + (j + 1) * nx
+            upper_right = (i + 1) + (j + 1) * nx
+            
+            # Dividi il quadrato in due triangoli
+            triangles.append([lower_left, lower_right, upper_left])
+            triangles.append([upper_left, lower_right, upper_right])
+
+    return np.array(points), np.array(triangles)
+
+def plot_mesh(points, triangles):
+    """
+    Plots the triangular mesh.
+
+    Parameters:
+    points - A 2D array of points in the mesh grid.
+    triangles - The elements of the mesh.
+    
+    This function creates a plot of the triangular mesh using matplotlib.
+    """
+    x_min, y_min = points.min(axis=0)
+    x_max, y_max = points.max(axis=0)
+    width = x_max - x_min
+    height = y_max - y_min
+    fig, ax = plt.subplots()
+    
+    ax.set_xlim(x_min - width * 0.1, x_max + width * 0.1)
+    ax.set_ylim(y_min - height * 0.1, y_max + height * 0.1)
+    plt.triplot(points[:, 0], points[:, 1], triangles, '.-', label="Nodes")
+    rect = patches.Rectangle((x_min, y_min), width, height, linewidth=2, edgecolor='r', facecolor='none', label="Border")
+    ax.add_patch(rect)    
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.legend(loc='upper right', bbox_to_anchor=(1.1, 1.1))
+    plt.show()
 
 def create_delaunay_mesh(a, b, c, d, nx, ny):
     """
@@ -58,7 +116,7 @@ def plot_delaunay_mesh(points, triangles):
     plt.show()
 
 
-def find_boundary_nodes_delaunay(points, a, b, c, d):
+def find_boundary_nodes(points, a, b, c, d):
     """
     Identifies boundary nodes in a set of points within a rectangular region. This will be used to apply the boundary conditions.
 
@@ -85,7 +143,7 @@ def find_boundary_nodes_delaunay(points, a, b, c, d):
 
 
 
-def compute_local_stiffness_matrix(coords):
+def compute_local_stiffness_matrix(points=np.array([[0, 0], [1, 0], [0, 1]])):
     """
     Compute the local stiffness matrix for a triangular element; this is used to compute the local matrix for a simple basic triangle.
     
@@ -104,11 +162,11 @@ def compute_local_stiffness_matrix(coords):
     
     area = 0.5 * abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2))
 
-    # Gradienti funzioni di forma
+    # Form functions gradient
     b = np.array([y2 - y3, y3 - y1, y1 - y2]) / (2 * area)
     c = np.array([x3 - x2, x1 - x3, x2 - x1]) / (2 * area)
 
-    # Matrice di rigidità
+    # Stiffness Matrix
     K = np.zeros((3, 3))
     for i in range(3):
         for j in range(3):
@@ -184,10 +242,10 @@ def assemble_global_stiffness_matrix(triangles, nodes, K_ref):
     for tri in triangles:
         points = np.array([nodes[tri[0]], nodes[tri[1]], nodes[tri[2]]])
 
-        # Calculate the local stiffness matrix for the current triangle
+        
         K_local = transform_stiffness_matrix(points, K_ref)
 
-        # Add the local stiffness matrix to the global matrix
+        
         for i in range(3):
             for j in range(3):
                 K_global[tri[i], tri[j]] += K_local[i, j]
@@ -197,3 +255,42 @@ def assemble_global_stiffness_matrix(triangles, nodes, K_ref):
 
 
 
+
+
+def compute_load_vector(f, nodes):
+    load_vector = np.zeros(len(nodes))
+
+    for i, node in enumerate(nodes):
+        load_vector[i] = f(node)
+
+    return load_vector
+
+
+def apply_reduced_system_approach(stiffness_matrix, load_vector, boundary_nodes):
+    stiffness_matrix = stiffness_matrix.tolil()  # Converte in lil_matrix se non lo è già
+    
+    for node_id in boundary_nodes:
+        stiffness_matrix[node_id, :] = 0
+        stiffness_matrix[:, node_id] = 0
+        load_vector[node_id] = 0
+
+    stiffness_matrix = stiffness_matrix.tocsr()  # Converte in csr_matrix per la risoluzione del sistema
+    stiffness_matrix.eliminate_zeros()
+
+    non_boundary_nodes = [i for i in range(stiffness_matrix.shape[0]) if i not in boundary_nodes]
+    reduced_stiffness_matrix = stiffness_matrix[non_boundary_nodes][:, non_boundary_nodes]
+    reduced_load_vector = load_vector[non_boundary_nodes]
+
+    return reduced_stiffness_matrix, reduced_load_vector
+
+
+def apply_boundary_conditions_penalty_method(stiffness_matrix, load_vector ,boundary_nodes, M=1e10):
+    
+    stiffness_matrix = stiffness_matrix.tolil()
+    for node_id in boundary_nodes:
+        stiffness_matrix[node_id, :] = 0
+        stiffness_matrix[:, node_id] = 0
+        stiffness_matrix[node_id, node_id] = M
+        load_vector[node_id] = 0   # Load vector set to zero although not necessary
+    
+    return stiffness_matrix,load_vector
