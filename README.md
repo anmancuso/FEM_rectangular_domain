@@ -93,7 +93,7 @@ The Jacobian $`J`$ of the transformation, which is the matrix of all first-order
 The transformed stiffness matrix `K` for the generic triangle is then calculated using the formula:
 
 $$
-K = det(J) * T^{(-1)}^T * K_{ref} * T^{-1}
+K = det(J) * T^{-1} ^T * K_{ref} * T^{-1}
 $$
 
 where $`K_{ref}`$ is the stiffness matrix for the reference triangle.
