@@ -65,7 +65,7 @@ Identifies boundary nodes in a set of points within a rectangular region.
 - **Returns**: A sorted list of indices of points that lie on the boundary of the rectangle.
 
 #### `compute_local_stiffness_matrix(coords)`
-Calculates the local stiffness matrix for a triangular element. The local stiffness matrix \( K \) for a triangle is calculated using the coordinates of its vertices. The general formula is:
+Calculates the local stiffness matrix for a triangular element. The local stiffness matrix $ K $ for a triangle is calculated using the coordinates of its vertices. The general formula is:
 
 $$
 K_{ij} = \int_{\Omega} \nabla \phi_i \cdot \nabla \phi_j , d\Omega
